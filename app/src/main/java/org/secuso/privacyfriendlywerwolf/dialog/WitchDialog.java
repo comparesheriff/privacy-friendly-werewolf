@@ -39,20 +39,12 @@ public class WitchDialog extends DialogFragment {
         AlertDialog dialog = new AlertDialog.Builder(getActivity())
                 .setTitle(dialogTitle)
                 .setMessage(dialogText)
-                .setPositiveButton(R.string.button_okay, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        // use the elixir
-                        ((GameActivity) getActivity()).doPositiveClick(elixir);
-                    }
+                .setPositiveButton(R.string.button_okay, (dialog12, which) -> {
+                    // use the elixir
+                    ((GameActivity) getActivity()).doPositiveClick(elixir);
                 })
                 // do not use the elixir
-                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        ((GameActivity) getActivity()).doNegativeClick(elixir);
-                    }
-                })
+                .setNegativeButton(android.R.string.no, (dialog1, which) -> ((GameActivity) getActivity()).doNegativeClick(elixir))
                 .setIcon(R.drawable.ic_local_drink_black_24dp)
                 .create();
 

@@ -49,16 +49,10 @@ public final class Screen {
         final int rotation = display.getRotation();
 
         final int width, height;
-        if (Build.VERSION.SDK_INT >= 13) {
-            Point size = new Point();
-            display.getSize(size);
-            width = size.x;
-            height = size.y;
-        }
-        else {
-            width = display.getWidth();
-            height = display.getHeight();
-        }
+        Point size = new Point();
+        display.getSize(size);
+        width = size.x;
+        height = size.y;
 
         switch (rotation) {
             case Surface.ROTATION_90:

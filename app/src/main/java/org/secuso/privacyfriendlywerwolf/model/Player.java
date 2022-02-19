@@ -27,8 +27,8 @@ public class Player implements Serializable {
     /**
      * the player's death status
      */
-    private boolean isDead = false;
-    private static long serialVersionUID = 1L;
+    private boolean isDead;
+    private static final long serialVersionUID = 1L;
 
     /**
      * Every player can act in a certain role, which are defined here
@@ -39,7 +39,7 @@ public class Player implements Serializable {
         WITCH(R.string.role_witch),
         SEER(R.string.role_seer);
 
-        private int roleName;
+        private final int roleName;
 
         Role(int roleName) {
             this.roleName = roleName;

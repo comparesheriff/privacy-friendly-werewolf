@@ -58,7 +58,7 @@ public class StartHostActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        serverGameController = serverGameController.getInstance();
+        serverGameController = ServerGameController.getInstance();
         serverGameController.setStartHostActivity(this);
         //reset everything
         serverGameController.destroy();
@@ -99,15 +99,9 @@ public class StartHostActivity extends BaseActivity {
                     new AlertDialog.Builder(activity)
                             .setTitle(R.string.startgame_need_players)
                             .setMessage(R.string.startgame_need_players_message)
-                            .setPositiveButton(R.string.button_okay, new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
-                                    openGameInformationDialog();
-                                }
-                            })
-                            .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
-                                    // just close and wait for more players
-                                }
+                            .setPositiveButton(R.string.button_okay, (dialog, which) -> openGameInformationDialog())
+                            .setNegativeButton(android.R.string.no, (dialog, which) -> {
+                                // just close and wait for more players
                             })
                             .setIcon(R.drawable.ic_face_black_24dp)
                             .setCancelable(false)
@@ -156,12 +150,7 @@ public class StartHostActivity extends BaseActivity {
      */
     public void renderUI() {
         fillStringPlayers();
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                playerAdapter.notifyDataSetChanged();
-            }
-        });
+        runOnUiThread(() -> playerAdapter.notifyDataSetChanged());
 
     }
 
@@ -197,7 +186,7 @@ public class StartHostActivity extends BaseActivity {
 
             } catch (SocketException e) {
                 e.printStackTrace();
-                ip += "Something Wrong! " + e.toString() + "\n";
+                ip += "Something Wrong! " + e + "\n";
             }
 
             return ip;

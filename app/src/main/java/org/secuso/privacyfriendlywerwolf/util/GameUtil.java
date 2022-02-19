@@ -18,14 +18,14 @@ public class GameUtil {
     private static final String TAG = "GameUtil";
 
     public static List<Player> getAllLivingPlayers() {
-        List<Player> citizen = new ArrayList<>();
+        List<Player> livingPlayers = new ArrayList<>();
         List<Player> players = GameContext.getInstance().getPlayersList();
         for (Player player : players) {
             if (!player.isDead()) {
-                citizen.add(player);
+                livingPlayers.add(player);
             }
         }
-        return citizen;
+        return livingPlayers;
     }
 
     /**

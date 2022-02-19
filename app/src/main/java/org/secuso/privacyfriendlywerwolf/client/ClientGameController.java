@@ -44,7 +44,7 @@ public class ClientGameController {
     private StartClientActivity startClientActivity;
     private GameActivity gameActivity;
     private WebsocketClientHandler websocketClientHandler;
-    private GameContext gameContext;
+    private final GameContext gameContext;
 
 
     private ClientGameController() {
@@ -212,12 +212,9 @@ public class ClientGameController {
     public void initiateWerewolfVotingPhase() {
 
         // soft timer
-        gameActivity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                int time = Integer.parseInt(gameContext.getSetting(SettingsEnum.TIME_WEREWOLF));
-                gameActivity.makeTimer(time).start();
-            }
+        gameActivity.runOnUiThread(() -> {
+            int time = Integer.parseInt(gameContext.getSetting(SettingsEnum.TIME_WEREWOLF));
+            gameActivity.makeTimer(time).start();
         });
 
         // Host
@@ -282,12 +279,9 @@ public class ClientGameController {
         Player roundVictim = getPlayerKilledByWerewolfesName();
         if (GameUtil.isWitchAlive() || (roundVictim != null && roundVictim.getPlayerRole() == Player.Role.WITCH)) {
             gameActivity.outputMessage(R.string.message_witch_awaken);
-            gameActivity.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    int time = Integer.parseInt(gameContext.getSetting(SettingsEnum.TIME_WITCH));
-                    gameActivity.makeTimer(time).start();
-                }
+            gameActivity.runOnUiThread(() -> {
+                int time = Integer.parseInt(gameContext.getSetting(SettingsEnum.TIME_WITCH));
+                gameActivity.makeTimer(time).start();
             });
 
             // Host
@@ -476,12 +470,9 @@ public class ClientGameController {
         if (GameUtil.isSeerAlive()
                 || (roundVictim != null && roundVictim.getPlayerRole() == Player.Role.SEER)
                 || (witchVictim != null && witchVictim.getPlayerRole() == Player.Role.SEER)) {
-            gameActivity.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    int time = Integer.parseInt(gameContext.getSetting(SettingsEnum.TIME_SEER));
-                    gameActivity.makeTimer(time).start();
-                }
+            gameActivity.runOnUiThread(() -> {
+                int time = Integer.parseInt(gameContext.getSetting(SettingsEnum.TIME_SEER));
+                gameActivity.makeTimer(time).start();
             });
             gameActivity.outputMessage(R.string.message_seer_awaken);
             if (myId == Constants.SERVER_PLAYER_ID && gameActivity.getMediaPlayer() != null) {
@@ -594,10 +585,10 @@ public class ClientGameController {
             } else if (killedPlayer != null && killedByWitchPlayer == null) {
                 gameActivity.setMediaPlayer(MediaPlayer.create(gameActivity.getApplicationContext(), R.raw.day_one_died));
                 gameActivity.getMediaPlayer().start();
-            } else if (killedPlayer == null && killedByWitchPlayer != null) {
+            } else if (killedPlayer == null) {
                 gameActivity.setMediaPlayer(MediaPlayer.create(gameActivity.getApplicationContext(), R.raw.day_one_died));
                 gameActivity.getMediaPlayer().start();
-            } else if (killedPlayer != null && killedByWitchPlayer != null) {
+            } else {
                 if (!(killedPlayer.getPlayerName().equals(killedByWitchPlayer.getPlayerName()))) {
                     gameActivity.setMediaPlayer(MediaPlayer.create(gameActivity.getApplicationContext(), R.raw.day_two_died));
                     gameActivity.getMediaPlayer().start();
@@ -605,8 +596,6 @@ public class ClientGameController {
                     gameActivity.setMediaPlayer(MediaPlayer.create(gameActivity.getApplicationContext(), R.raw.day_one_died));
                     gameActivity.getMediaPlayer().start();
                 }
-            } else {
-                Log.d(TAG, "initiateDayPhase(): Something went wrong here");
             }
 
         } else {
@@ -635,13 +624,13 @@ public class ClientGameController {
             gameActivity.showTextPopup(R.string.popup_title_victims, R.string.popup_text_none_died);
         } else if (killedPlayer != null && killedByWitchPlayer == null) {
             gameActivity.showTextPopup(R.string.popup_title_victims, killedPlayer.getPlayerName() + " (" + gameActivity.getResources().getString(killedPlayer.getPlayerRole().getRole()) + ")", R.string.popup_text_killed_this_night);
-        } else if (killedPlayer == null && killedByWitchPlayer != null) {
+        } else if (killedPlayer == null) {
             gameActivity.showTextPopup(R.string.popup_title_victims, killedByWitchPlayer.getPlayerName() + " (" + gameActivity.getResources().getString(killedByWitchPlayer.getPlayerRole().getRole()) + ")",  R.string.popup_text_killed_this_night);
-        } else if (killedPlayer != null && killedByWitchPlayer != null) {
+        } else {
             if (!(killedPlayer.getPlayerName().equals(killedByWitchPlayer.getPlayerName()))) {
                 Log.d(TAG, "Two died: random generated the num " + ContextUtil.RANDOM_INDEX);
-                Player firstVictim = null;
-                Player secondVictim = null;
+                Player firstVictim;
+                Player secondVictim;
                 if (ContextUtil.RANDOM_INDEX == 0) {
                     firstVictim = killedPlayer;
                     secondVictim = killedByWitchPlayer;
@@ -683,12 +672,9 @@ public class ClientGameController {
                 gameActivity.longOutputMessage(R.string.toast_start_discussion);
             }
             gameActivity.outputMessage(R.string.message_villagers_discuss);
-            gameActivity.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    int time = Integer.parseInt(gameContext.getSetting(SettingsEnum.TIME_VILLAGER));
-                    gameActivity.makeTimer(time).start();
-                }
+            gameActivity.runOnUiThread(() -> {
+                int time = Integer.parseInt(gameContext.getSetting(SettingsEnum.TIME_VILLAGER));
+                gameActivity.makeTimer(time).start();
             });
             ContextUtil.END_OF_ROUND = true;
             if (myId == Constants.SERVER_PLAYER_ID) {
@@ -726,12 +712,9 @@ public class ClientGameController {
         }
 
         // indicator for the players as to when the game will exit
-        gameActivity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                int time = 15;
-                gameActivity.makeTimer(time).start();
-            }
+        gameActivity.runOnUiThread(() -> {
+            int time = 15;
+            gameActivity.makeTimer(time).start();
         });
 
         try {
@@ -771,12 +754,9 @@ public class ClientGameController {
         }
 
         // indicator for the players as to when the game will exit
-        gameActivity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                int time = 15;
-                gameActivity.makeTimer(time).start();
-            }
+        gameActivity.runOnUiThread(() -> {
+            int time = 15;
+            gameActivity.makeTimer(time).start();
         });
 
         try {
@@ -948,7 +928,7 @@ public class ClientGameController {
                 serverGameController.handleVotingResult(Constants.EMPTY_VOTING_PLAYER);
             } else {
                 try {
-                    NetworkPackage<String> np = new NetworkPackage<String>(NetworkPackage.PACKAGE_TYPE.VOTING_RESULT);
+                    NetworkPackage<String> np = new NetworkPackage<>(NetworkPackage.PACKAGE_TYPE.VOTING_RESULT);
                     np.setPayload("");
                     websocketClientHandler.send(np);
                 } catch (Exception e) {
@@ -1072,7 +1052,7 @@ public class ClientGameController {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        } else if (myId == 0) {
+        } else {
             Log.d(TAG, "Host is now done!");
             ServerGameController.HOST_IS_DONE = true;
             // startNextPhase when all Clients are ready as well

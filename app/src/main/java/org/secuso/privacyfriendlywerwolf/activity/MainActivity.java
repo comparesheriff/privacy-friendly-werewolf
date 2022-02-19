@@ -29,19 +29,9 @@ public class MainActivity extends BaseActivity {
         Button buttonJoinGame = (Button) findViewById(R.id.game_button_join);
         Button buttonNewGame = (Button) findViewById(R.id.game_button_start);
 
-        buttonJoinGame.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                joinGame(view);
-            }
-        });
+        buttonJoinGame.setOnClickListener(this::joinGame);
 
-        buttonNewGame.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startNewGame(view);
-            }
-        });
+        buttonNewGame.setOnClickListener(this::startNewGame);
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle(R.string.action_main);

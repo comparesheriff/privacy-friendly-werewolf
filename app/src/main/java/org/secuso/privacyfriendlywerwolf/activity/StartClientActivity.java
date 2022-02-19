@@ -21,7 +21,6 @@ import org.secuso.privacyfriendlywerwolf.R;
 import org.secuso.privacyfriendlywerwolf.client.ClientGameController;
 import org.secuso.privacyfriendlywerwolf.dialog.TextDialog;
 import org.secuso.privacyfriendlywerwolf.helpers.PermissionHelper;
-import org.secuso.privacyfriendlywerwolf.util.Constants;
 
 import java.util.Random;
 
@@ -82,22 +81,17 @@ public class StartClientActivity extends BaseActivity {
         waitingMode = false;
 
         // connect to the host
-        buttonConnect.setOnClickListener(new OnClickListener() {
+        buttonConnect.setOnClickListener(arg0 -> {
+            String url = editTextAddress.getText().toString();
+            String playerName = editTextPlayerName.getText().toString();
+            sharedPref.edit().putString(pref_playerName, playerName).apply();
 
-
-            @Override
-            public void onClick(View arg0) {
-                String url = editTextAddress.getText().toString();
-                String playerName = editTextPlayerName.getText().toString();
-                sharedPref.edit().putString(pref_playerName, playerName).apply();
-
-                if(TextUtils.isEmpty(editTextPlayerName.getText().toString())) {
-                    playerName = getString(R.string.player_name_default) + " " + new Random().nextInt(1000);
-                }
-
-                gameController.connect("ws://" + url + ":5000/ws", playerName);
-                deactivateConnectButton();
+            if(TextUtils.isEmpty(editTextPlayerName.getText().toString())) {
+                playerName = getString(R.string.player_name_default) + " " + new Random().nextInt(1000);
             }
+
+            gameController.connect("ws://" + url + ":5000/ws", playerName);
+            deactivateConnectButton();
         });
 
         PermissionHelper.showWifiAlert(this);
@@ -129,7 +123,7 @@ public class StartClientActivity extends BaseActivity {
      * therefore wait, if the user changed this fast)
      */
     public void openConnectionFailedDialog() {
-        if (waitingMode == false) {
+        if (!waitingMode) {
             TextDialog textDialog = new TextDialog();
             textDialog.setDialogTitle(getResources().getString(R.string.uh_dialog_title));
             textDialog.setDialogText(getResources().getString(R.string.uh_dialog_text));
@@ -151,21 +145,18 @@ public class StartClientActivity extends BaseActivity {
      */
     public void showConnected() {
         waitingMode = true;
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                LinearLayout layout = (LinearLayout) findViewById(R.id.connectForm);
-                layout.removeAllViews();
+        runOnUiThread(() -> {
+            LinearLayout layout = (LinearLayout) findViewById(R.id.connectForm);
+            layout.removeAllViews();
 
-                TextView waitMessage = new TextView(getApplicationContext());
-                waitMessage.setText(R.string.joingame_connected);
-                waitMessage.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-                waitMessage.setTextSize(TypedValue.COMPLEX_UNIT_PT, 10f);
-                waitMessage.setPadding(0, 50, 0, 0);
-                waitMessage.setTextColor(getResources().getColor(R.color.black));
+            TextView waitMessage = new TextView(getApplicationContext());
+            waitMessage.setText(R.string.joingame_connected);
+            waitMessage.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+            waitMessage.setTextSize(TypedValue.COMPLEX_UNIT_PT, 10f);
+            waitMessage.setPadding(0, 50, 0, 0);
+            waitMessage.setTextColor(getResources().getColor(R.color.black));
 
-                layout.addView(waitMessage);
-            }
+            layout.addView(waitMessage);
         });
 
     }

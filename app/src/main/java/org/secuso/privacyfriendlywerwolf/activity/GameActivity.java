@@ -120,57 +120,40 @@ public class GameActivity extends BaseActivity {
 
             // if all players are connected the host can start the game
             // by clicking the start_game_button
-            fab.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    gameHandler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            ServerGameController.HOST_IS_DONE = true;
-                            ServerGameController.CLIENTS_ARE_DONE = true;
-                            if (ContextUtil.IS_FIRST_ROUND) {
-                                Log.d(TAG, "FabButton clicked on Phase: " + gameController.getGameContext().getCurrentPhase().toString());
+            fab.setOnClickListener(v -> gameHandler.post(() -> {
+                ServerGameController.HOST_IS_DONE = true;
+                ServerGameController.CLIENTS_ARE_DONE = true;
+                if (ContextUtil.IS_FIRST_ROUND) {
+                    Log.d(TAG, "FabButton clicked on Phase: " + gameController.getGameContext().getCurrentPhase().toString());
 
-                                // at the end of the first round
-                                if (ContextUtil.END_OF_ROUND && gameController.getGameContext().getCurrentPhase() != null
-                                        && (gameController.getGameContext().getCurrentPhase() == GamePhaseEnum.GAME_START)) {
-                                    // first round is over
-                                    ContextUtil.IS_FIRST_ROUND = false;
-                                }
-                                runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        // disable info text
-                                        TextView view = (TextView) findViewById(R.id.fab_info_view);
-                                        view.setVisibility(View.GONE);
-                                    }
-                                });
-
-                            }
-                            deactivateNextButton();
-                            ServerGameController.getInstance().startNextPhase();
-                        }
+                    // at the end of the first round
+                    if (ContextUtil.END_OF_ROUND && gameController.getGameContext().getCurrentPhase() != null
+                            && (gameController.getGameContext().getCurrentPhase() == GamePhaseEnum.GAME_START)) {
+                        // first round is over
+                        ContextUtil.IS_FIRST_ROUND = false;
+                    }
+                    runOnUiThread(() -> {
+                        // disable info text
+                        TextView view = (TextView) findViewById(R.id.fab_info_view);
+                        view.setVisibility(View.GONE);
                     });
+
                 }
-            });
+                deactivateNextButton();
+                ServerGameController.getInstance().startNextPhase();
+            }));
 
             if (Constants.GAME_FEATURES_ACTIVATED) {
                 fab.setClickable(false);
             }
 
-            gameHandler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    activateNextButton();
-                    showTextPopup("Ready, Set, Go!", R.string.popup_text_start_first_night);
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            TextView view = (TextView) findViewById(R.id.fab_info_view);
-                            view.setVisibility(View.VISIBLE);
-                        }
-                    });
-                }
+            gameHandler.postDelayed(() -> {
+                activateNextButton();
+                showTextPopup("Ready, Set, Go!", R.string.popup_text_start_first_night);
+                runOnUiThread(() -> {
+                    TextView view = (TextView) findViewById(R.id.fab_info_view);
+                    view.setVisibility(View.VISIBLE);
+                });
             }, 6000);
 
             serverGameController = ServerGameController.getInstance();
@@ -202,13 +185,10 @@ public class GameActivity extends BaseActivity {
      * open the voting dialog
      */
     public void openVoting() {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                VotingDialog votingDialog = new VotingDialog();
-                votingDialog.setCancelable(false);
-                votingDialog.show(getFragmentManager(), "voting");
-            }
+        runOnUiThread(() -> {
+            VotingDialog votingDialog = new VotingDialog();
+            votingDialog.setCancelable(false);
+            votingDialog.show(getFragmentManager(), "voting");
         });
 
     }
@@ -220,15 +200,12 @@ public class GameActivity extends BaseActivity {
      * @param message, the message of the dialog
      */
     public void showTextPopup(final String title, final String message) {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                TextDialog textDialog = new TextDialog();
-                textDialog.setDialogText(message);
-                textDialog.setDialogTitle(title);
-                textDialog.setCancelable(false);
-                textDialog.show(getFragmentManager(), "textPopup");
-            }
+        runOnUiThread(() -> {
+            TextDialog textDialog = new TextDialog();
+            textDialog.setDialogText(message);
+            textDialog.setDialogTitle(title);
+            textDialog.setCancelable(false);
+            textDialog.show(getFragmentManager(), "textPopup");
         });
 
     }
@@ -241,15 +218,12 @@ public class GameActivity extends BaseActivity {
      */
     public void showTextPopup(int titleInt, final String message) {
         final String title = getResources().getString(titleInt);
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                TextDialog textDialog = new TextDialog();
-                textDialog.setDialogText(message);
-                textDialog.setDialogTitle(title);
-                textDialog.setCancelable(false);
-                textDialog.show(getFragmentManager(), "textPopup");
-            }
+        runOnUiThread(() -> {
+            TextDialog textDialog = new TextDialog();
+            textDialog.setDialogText(message);
+            textDialog.setDialogTitle(title);
+            textDialog.setCancelable(false);
+            textDialog.show(getFragmentManager(), "textPopup");
         });
 
     }
@@ -262,15 +236,12 @@ public class GameActivity extends BaseActivity {
      */
     public void showTextPopup(final String title, int messageInt) {
         final String message = getResources().getString(messageInt);
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                TextDialog textDialog = new TextDialog();
-                textDialog.setDialogText(message);
-                textDialog.setDialogTitle(title);
-                textDialog.setCancelable(false);
-                textDialog.show(getFragmentManager(), "textPopup");
-            }
+        runOnUiThread(() -> {
+            TextDialog textDialog = new TextDialog();
+            textDialog.setDialogText(message);
+            textDialog.setDialogTitle(title);
+            textDialog.setCancelable(false);
+            textDialog.show(getFragmentManager(), "textPopup");
         });
 
     }
@@ -284,15 +255,12 @@ public class GameActivity extends BaseActivity {
     public void showTextPopup(int titleInt, int messageInt) {
         final String title = getResources().getString(titleInt);
         final String message = getResources().getString(messageInt);
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                TextDialog textDialog = new TextDialog();
-                textDialog.setDialogText(message);
-                textDialog.setDialogTitle(title);
-                textDialog.setCancelable(false);
-                textDialog.show(getFragmentManager(), "textPopup");
-            }
+        runOnUiThread(() -> {
+            TextDialog textDialog = new TextDialog();
+            textDialog.setDialogText(message);
+            textDialog.setDialogTitle(title);
+            textDialog.setCancelable(false);
+            textDialog.show(getFragmentManager(), "textPopup");
         });
 
     }
@@ -306,15 +274,12 @@ public class GameActivity extends BaseActivity {
     public void showTextPopup(int titleInt, int messageInt, final String extra) {
         final String title = getResources().getString(titleInt);
         final String message = getResources().getString(messageInt);
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                TextDialog textDialog = new TextDialog();
-                textDialog.setDialogTitle(title);
-                textDialog.setDialogText(message + " " + extra);
-                textDialog.setCancelable(false);
-                textDialog.show(getFragmentManager(), "textPopup");
-            }
+        runOnUiThread(() -> {
+            TextDialog textDialog = new TextDialog();
+            textDialog.setDialogTitle(title);
+            textDialog.setDialogText(message + " " + extra);
+            textDialog.setCancelable(false);
+            textDialog.show(getFragmentManager(), "textPopup");
         });
 
     }
@@ -329,15 +294,12 @@ public class GameActivity extends BaseActivity {
     public void showTextPopup(int titleInt, final String message, int extraInt) {
         final String title = getResources().getString(titleInt);
         final String extra = getResources().getString(extraInt);
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                TextDialog textDialog = new TextDialog();
-                textDialog.setDialogTitle(title);
-                textDialog.setDialogText(message + " " + extra);
-                textDialog.setCancelable(false);
-                textDialog.show(getFragmentManager(), "textPopup");
-            }
+        runOnUiThread(() -> {
+            TextDialog textDialog = new TextDialog();
+            textDialog.setDialogTitle(title);
+            textDialog.setDialogText(message + " " + extra);
+            textDialog.setCancelable(false);
+            textDialog.show(getFragmentManager(), "textPopup");
         });
 
     }
@@ -349,13 +311,10 @@ public class GameActivity extends BaseActivity {
      */
     public void showGameEndTextView(int titleInt) {
         final String title = getResources().getString(titleInt);
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                TextView view = (TextView) findViewById(R.id.game_end_view);
-                view.setText(title);
-                view.setVisibility(View.VISIBLE);
-            }
+        runOnUiThread(() -> {
+            TextView view = (TextView) findViewById(R.id.game_end_view);
+            view.setText(title);
+            view.setVisibility(View.VISIBLE);
         });
     }
 
@@ -365,13 +324,10 @@ public class GameActivity extends BaseActivity {
      * @param title, the title of the dialog
      */
     public void showGameEndTextView(final String title) {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                TextView view = (TextView) findViewById(R.id.game_end_view);
-                view.setText(title);
-                view.setVisibility(View.VISIBLE);
-            }
+        runOnUiThread(() -> {
+            TextView view = (TextView) findViewById(R.id.game_end_view);
+            view.setText(title);
+            view.setVisibility(View.VISIBLE);
         });
     }
 
@@ -382,16 +338,13 @@ public class GameActivity extends BaseActivity {
      * @param message, the message of the dialog
      */
     public void showWitchTextPopup(final String title, final String message) {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                TextDialog textDialog = new TextDialog();
-                textDialog.setDialogText(message);
-                textDialog.setDialogTitle(title);
-                textDialog.setMargin(0.15F);
-                textDialog.setCancelable(false);
-                textDialog.show(getFragmentManager(), "textPopup");
-            }
+        runOnUiThread(() -> {
+            TextDialog textDialog = new TextDialog();
+            textDialog.setDialogText(message);
+            textDialog.setDialogTitle(title);
+            textDialog.setMargin(0.15F);
+            textDialog.setCancelable(false);
+            textDialog.show(getFragmentManager(), "textPopup");
         });
 
     }
@@ -404,16 +357,13 @@ public class GameActivity extends BaseActivity {
      */
     public void showWitchTextPopup(int titleInt, final String message) {
         final String title = getResources().getString(titleInt);
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                TextDialog textDialog = new TextDialog();
-                textDialog.setDialogText(message);
-                textDialog.setDialogTitle(title);
-                textDialog.setMargin(0.15F);
-                textDialog.setCancelable(false);
-                textDialog.show(getFragmentManager(), "textPopup");
-            }
+        runOnUiThread(() -> {
+            TextDialog textDialog = new TextDialog();
+            textDialog.setDialogText(message);
+            textDialog.setDialogTitle(title);
+            textDialog.setMargin(0.15F);
+            textDialog.setCancelable(false);
+            textDialog.show(getFragmentManager(), "textPopup");
         });
 
     }
@@ -427,15 +377,12 @@ public class GameActivity extends BaseActivity {
     public void showWitchElixirPopup(int titleInt, int messageInt) {
         final String title = getResources().getString(titleInt);
         final String message = getResources().getString(messageInt);
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                WitchDialog textDialog = WitchDialog.newInstance(0);
-                textDialog.setDialogText(message);
-                textDialog.setDialogTitle(title);
-                textDialog.setCancelable(false);
-                textDialog.show(getFragmentManager(), "textPopup");
-            }
+        runOnUiThread(() -> {
+            WitchDialog textDialog = WitchDialog.newInstance(0);
+            textDialog.setDialogText(message);
+            textDialog.setDialogTitle(title);
+            textDialog.setCancelable(false);
+            textDialog.show(getFragmentManager(), "textPopup");
         });
     }
 
@@ -447,15 +394,12 @@ public class GameActivity extends BaseActivity {
      */
     public void showWitchElixirPopup(int titleInt, final String message) {
         final String title = getResources().getString(titleInt);
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                WitchDialog textDialog = WitchDialog.newInstance(0);
-                textDialog.setDialogText(message);
-                textDialog.setDialogTitle(title);
-                textDialog.setCancelable(false);
-                textDialog.show(getFragmentManager(), "textPopup");
-            }
+        runOnUiThread(() -> {
+            WitchDialog textDialog = WitchDialog.newInstance(0);
+            textDialog.setDialogText(message);
+            textDialog.setDialogTitle(title);
+            textDialog.setCancelable(false);
+            textDialog.show(getFragmentManager(), "textPopup");
         });
     }
 
@@ -466,15 +410,12 @@ public class GameActivity extends BaseActivity {
      * @param message, the message of the dialog
      */
     public void showWitchElixirPopup(final String title, final String message) {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                WitchDialog textDialog = WitchDialog.newInstance(0);
-                textDialog.setDialogText(message);
-                textDialog.setDialogTitle(title);
-                textDialog.setCancelable(false);
-                textDialog.show(getFragmentManager(), "textPopup");
-            }
+        runOnUiThread(() -> {
+            WitchDialog textDialog = WitchDialog.newInstance(0);
+            textDialog.setDialogText(message);
+            textDialog.setDialogTitle(title);
+            textDialog.setCancelable(false);
+            textDialog.show(getFragmentManager(), "textPopup");
         });
     }
 
@@ -487,15 +428,12 @@ public class GameActivity extends BaseActivity {
     public void showWitchPoisonPopup(int titleInt, int messageInt) {
         final String title = getResources().getString(titleInt);
         final String message = getResources().getString(messageInt);
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                WitchDialog textDialog = WitchDialog.newInstance(1);
-                textDialog.setDialogText(message);
-                textDialog.setDialogTitle(title);
-                textDialog.setCancelable(false);
-                textDialog.show(getFragmentManager(), "textPopup");
-            }
+        runOnUiThread(() -> {
+            WitchDialog textDialog = WitchDialog.newInstance(1);
+            textDialog.setDialogText(message);
+            textDialog.setDialogTitle(title);
+            textDialog.setCancelable(false);
+            textDialog.show(getFragmentManager(), "textPopup");
         });
     }
 
@@ -507,15 +445,12 @@ public class GameActivity extends BaseActivity {
      */
     public void showWitchPoisonPopup(int titleInt, final String message) {
         final String title = getResources().getString(titleInt);
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                WitchDialog textDialog = WitchDialog.newInstance(1);
-                textDialog.setDialogText(message);
-                textDialog.setDialogTitle(title);
-                textDialog.setCancelable(false);
-                textDialog.show(getFragmentManager(), "textPopup");
-            }
+        runOnUiThread(() -> {
+            WitchDialog textDialog = WitchDialog.newInstance(1);
+            textDialog.setDialogText(message);
+            textDialog.setDialogTitle(title);
+            textDialog.setCancelable(false);
+            textDialog.show(getFragmentManager(), "textPopup");
         });
     }
 
@@ -526,27 +461,19 @@ public class GameActivity extends BaseActivity {
      * @param message, the message of the dialog
      */
     public void showWitchPoisonPopup(final String title, final String message) {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                WitchDialog textDialog = WitchDialog.newInstance(1);
-                textDialog.setDialogText(message);
-                textDialog.setDialogTitle(title);
-                textDialog.setCancelable(false);
-                textDialog.show(getFragmentManager(), "textPopup");
-            }
+        runOnUiThread(() -> {
+            WitchDialog textDialog = WitchDialog.newInstance(1);
+            textDialog.setDialogText(message);
+            textDialog.setDialogTitle(title);
+            textDialog.setCancelable(false);
+            textDialog.show(getFragmentManager(), "textPopup");
         });
     }
 
     public void doPositiveClick(int i) {
         if (i == ELIXIR_CLICK) {
             ClientGameController.getInstance().usedElixir();
-            gameHandler.post(new Runnable() {
-                @Override
-                public void run() {
-                    gameController.endWitchElixirPhase();
-                }
-            });
+            gameHandler.post(() -> gameController.endWitchElixirPhase());
 
         } else if (i == POISON_CLICK) {
             outputMessage(R.string.progressBar_choose);
@@ -557,22 +484,14 @@ public class GameActivity extends BaseActivity {
 
     public void doNegativeClick(int i) {
         if (i == ELIXIR_CLICK) {
-            gameHandler.post(new Runnable() {
-                @Override
-                public void run() {
-                    gameController.endWitchElixirPhase();
-                }
-            });
+            gameHandler.post(() -> gameController.endWitchElixirPhase());
 
             //ClientGameController.getInstance().usePoison();
         } else if (i == POISON_CLICK) {
-            gameHandler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    longOutputMessage(R.string.toast_close_eyes);
+            gameHandler.postDelayed(() -> {
+                longOutputMessage(R.string.toast_close_eyes);
 
-                    gameController.endWitchPoisonPhase();
-                }
+                gameController.endWitchPoisonPhase();
             }, 1000);
 
             //ClientGameController.getInstance().endWitchPhase();
@@ -601,13 +520,10 @@ public class GameActivity extends BaseActivity {
      * @param info text to be displayed to the host
      */
     public void showFabInfo(final String info) {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                TextView view = (TextView) findViewById(R.id.fab_info_view);
-                view.setText(info);
-                view.setVisibility(View.VISIBLE);
-            }
+        runOnUiThread(() -> {
+            TextView view = (TextView) findViewById(R.id.fab_info_view);
+            view.setText(info);
+            view.setVisibility(View.VISIBLE);
         });
     }
 
@@ -618,97 +534,58 @@ public class GameActivity extends BaseActivity {
      */
     public void showFabInfo(int infoInt) {
         final String info = getResources().getString(infoInt);
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                TextView view = (TextView) findViewById(R.id.fab_info_view);
-                view.setText(info);
-                view.setVisibility(View.VISIBLE);
-            }
+        runOnUiThread(() -> {
+            TextView view = (TextView) findViewById(R.id.fab_info_view);
+            view.setText(info);
+            view.setVisibility(View.VISIBLE);
         });
     }
 
     // make the NextButton clickable
     public void activateNextButton() {
-        runOnUiThread(new Runnable() {
-                          @Override
-                          public void run() {
-                              fab.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(getApplicationContext(), R.color.colorAccent)));
-                              fab.setClickable(true);
-                          }
-                      }
+        runOnUiThread(() -> {
+            fab.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(getApplicationContext(), R.color.colorAccent)));
+            fab.setClickable(true);
+        }
 
         );
     }
 
     // make the NextButton unclickable
     public void deactivateNextButton() {
-        runOnUiThread(new Runnable() {
-                          @Override
-                          public void run() {
-                              fab.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(getApplicationContext(), R.color.middlegrey)));
-                              if (Constants.GAME_FEATURES_ACTIVATED) {
-                                  fab.setClickable(false);
-                              }
-                          }
-                      }
+        runOnUiThread(() -> {
+            fab.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(getApplicationContext(), R.color.middlegrey)));
+            if (Constants.GAME_FEATURES_ACTIVATED) {
+                fab.setClickable(false);
+            }
+        }
 
         );
     }
 
     public void outputMessage(final String message) {
-        runOnUiThread(new Runnable() {
-
-            @Override
-            public void run() {
-                messageView.setText(message);
-            }
-        });
+        runOnUiThread(() -> messageView.setText(message));
     }
 
     public void outputMessage(int messageInt) {
         final String message = this.getResources().getString(messageInt);
-        runOnUiThread(new Runnable() {
-
-            @Override
-            public void run() {
-                messageView.setText(message);
-            }
-        });
+        runOnUiThread(() -> messageView.setText(message));
 
     }
 
     public void longOutputMessage(final String message) {
         // accessing UI thread from background thread
-        runOnUiThread(new Runnable() {
-
-            @Override
-            public void run() {
-                Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
-            }
-        });
+        runOnUiThread(() -> Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show());
     }
 
     public void longOutputMessage(int messageInt) {
         final String message = getResources().getString(messageInt);
-        runOnUiThread(new Runnable() {
-
-            @Override
-            public void run() {
-                Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
-            }
-        });
+        runOnUiThread(() -> Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show());
     }
 
     public void longOutputMessage(int messageInt, final String extra) {
         final String message = getResources().getString(messageInt);
-        runOnUiThread(new Runnable() {
-
-            @Override
-            public void run() {
-                Toast.makeText(getApplicationContext(), message + " " + extra, Toast.LENGTH_LONG).show();
-            }
-        });
+        runOnUiThread(() -> Toast.makeText(getApplicationContext(), message + " " + extra, Toast.LENGTH_LONG).show());
     }
 
     /**
@@ -729,9 +606,9 @@ public class GameActivity extends BaseActivity {
 
         progressBar.setMax(seconds * 1000);
 
-        this.countDownTimer = new CountDownTimer(seconds * 1000, 1000) {
+        this.countDownTimer = new CountDownTimer(seconds * 1000L, 1000) {
 
-            ClientGameController gameController = ClientGameController.getInstance();
+            final ClientGameController gameController = ClientGameController.getInstance();
 
             /**
              * Update progress bar and time on regular interval.
@@ -740,15 +617,14 @@ public class GameActivity extends BaseActivity {
              */
             @Override
             public void onTick(long millisUntilFinished) {
-                long progress = millisUntilFinished;
 
-                ObjectAnimator animation = ObjectAnimator.ofInt(progressBar, "progress", Long.valueOf(progress).intValue());
+                ObjectAnimator animation = ObjectAnimator.ofInt(progressBar, "progress", Long.valueOf(millisUntilFinished).intValue());
                 animation.setDuration(999); // 0.5 second
                 animation.setInterpolator(new DecelerateInterpolator());
                 animation.start();
 
                 // progressBar.setProgress(Long.valueOf(progress).intValue());
-                countdown.setText(Long.valueOf(progress / 1000).toString() + " s");
+                countdown.setText(Long.valueOf(millisUntilFinished / 1000).toString() + " s");
             }
 
             /**
@@ -769,13 +645,10 @@ public class GameActivity extends BaseActivity {
      */
     public void updateGamefield() {
         final GameActivity gameActivity = this;
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                GridView layout = (GridView) findViewById(R.id.players);
-                playerAdapter = new PlayerAdapter(gameActivity, gameController.getMyPlayerId());
-                layout.setAdapter(playerAdapter);
-            }
+        runOnUiThread(() -> {
+            GridView layout = (GridView) findViewById(R.id.players);
+            playerAdapter = new PlayerAdapter(gameActivity, gameController.getMyPlayerId());
+            layout.setAdapter(playerAdapter);
         });
     }
 
@@ -788,35 +661,33 @@ public class GameActivity extends BaseActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        switch (item.getItemId()) {
-            case R.id.menu_abort:
-                new AlertDialog.Builder(this)
-                        .setTitle(R.string.gamefield_abort_game)
-                        .setMessage(R.string.gamefield_abort_game_message)
-                        .setPositiveButton(R.string.button_okay, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                showTextPopup(R.string.popup_title_abort, R.string.popup_text_abort);
-                                runOnGameThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        serverGameController.abortGame();
-                                    }
-                                }, 3000);
+        if (item.getItemId() == R.id.menu_abort) {
+            new AlertDialog.Builder(this)
+                    .setTitle(R.string.gamefield_abort_game)
+                    .setMessage(R.string.gamefield_abort_game_message)
+                    .setPositiveButton(R.string.button_okay, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            showTextPopup(R.string.popup_title_abort, R.string.popup_text_abort);
+                            runOnGameThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    serverGameController.abortGame();
+                                }
+                            }, 3000);
 
-                            }
-                        })
-                        .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                // do nothing
-                            }
-                        })
-                        .setIcon(R.drawable.ic_close_black_24dp)
-                        .setCancelable(false)
-                        .show();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+                        }
+                    })
+                    .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            // do nothing
+                        }
+                    })
+                    .setIcon(R.drawable.ic_close_black_24dp)
+                    .setCancelable(false)
+                    .show();
+            return true;
         }
+        return super.onOptionsItemSelected(item);
 
     }
 
@@ -828,25 +699,18 @@ public class GameActivity extends BaseActivity {
         new AlertDialog.Builder(this)
                 .setTitle(R.string.gamefield_press_back)
                 .setMessage(R.string.gamefield_press_back_message)
-                .setPositiveButton(R.string.button_okay, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        showTextPopup(R.string.popup_title_abort, R.string.popup_text_abort);
-                        runOnGameThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                if (isHost) {
-                                    serverGameController.abortGame();
-                                } else {
-                                    gameController.abortGame();
-                                }
-                            }
-                        }, 3000);
-                    }
+                .setPositiveButton(R.string.button_okay, (dialog, which) -> {
+                    showTextPopup(R.string.popup_title_abort, R.string.popup_text_abort);
+                    runOnGameThread(() -> {
+                        if (isHost) {
+                            serverGameController.abortGame();
+                        } else {
+                            gameController.abortGame();
+                        }
+                    }, 3000);
                 })
-                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        // do nothing
-                    }
+                .setNegativeButton(android.R.string.no, (dialog, which) -> {
+                    // do nothing
                 })
                 .setIcon(R.drawable.ic_close_black_24dp)
                 .setCancelable(false)

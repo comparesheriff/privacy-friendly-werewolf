@@ -45,8 +45,8 @@ public class ServerGameController {
     private StartHostActivity startHostActivity;
     private GameActivity gameActivity;
     private GameContext gameContext;
-    private VotingController votingController;
-    private ClientGameController clientGameController;
+    private final VotingController votingController;
+    private final ClientGameController clientGameController;
 
     public static boolean HOST_IS_DONE = false;
     public static boolean CLIENTS_ARE_DONE = false;
@@ -140,7 +140,7 @@ public class ServerGameController {
         gameContext.setPlayers(players);
 
         try {
-            NetworkPackage np = new NetworkPackage<GameContext>(NetworkPackage.PACKAGE_TYPE.START_GAME);
+            NetworkPackage<GameContext> np = new NetworkPackage<>(NetworkPackage.PACKAGE_TYPE.START_GAME);
             np.setPayload(gameContext);
             serverHandler.send(np);
 
@@ -180,7 +180,7 @@ public class ServerGameController {
                 ContextUtil.RANDOM_INDEX = index;
 
                 try {
-                    NetworkPackage np = new NetworkPackage<>(NetworkPackage.PACKAGE_TYPE.PHASE);
+                    NetworkPackage<GamePhaseEnum> np = new NetworkPackage<>(NetworkPackage.PACKAGE_TYPE.PHASE);
                     np.setPayload(gameContext.getCurrentPhase());
                     if (gameContext.getCurrentPhase() == GamePhaseEnum.PHASE_DAY_START) {
                         np.setOption("random number", String.valueOf(index));
@@ -192,7 +192,7 @@ public class ServerGameController {
                 }
             } else {
                 try {
-                    NetworkPackage np = new NetworkPackage<>(NetworkPackage.PACKAGE_TYPE.PHASE);
+                    NetworkPackage<GamePhaseEnum> np = new NetworkPackage<>(NetworkPackage.PACKAGE_TYPE.PHASE);
                     np.setPayload(gameContext.getCurrentPhase());
                     Log.d(TAG, "send current phase: " + gameContext.getCurrentPhase());
                     serverHandler.send(np);
@@ -245,7 +245,6 @@ public class ServerGameController {
                     clientGameController.endDayPhase();
                     break;
                 case PHASE_DAY_END:
-                    break;
                 default:
                     break;
             }
@@ -298,9 +297,9 @@ public class ServerGameController {
                 Log.d(TAG, "all votes received kill this guy:" + winner.getPlayerName());
 
 
-                NetworkPackage np = null;
+                NetworkPackage np;
                 try {
-                    np = new NetworkPackage(NetworkPackage.PACKAGE_TYPE.VOTING_RESULT);
+                    np = new NetworkPackage<>(NetworkPackage.PACKAGE_TYPE.VOTING_RESULT);
                     np.setOption("playerName", winner.getPlayerName());
                     serverHandler.send(np);
                 } catch (Exception e) {
@@ -440,7 +439,6 @@ public class ServerGameController {
                 return GamePhaseEnum.PHASE_DAY_END;
             case PHASE_DAY_END:
                 //gameActivity.getNextButton().setVisibility(View.VISIBLE);
-                return GamePhaseEnum.GAME_START;
             default:
                 return GamePhaseEnum.GAME_START;
         }
@@ -481,7 +479,7 @@ public class ServerGameController {
     public void abortGame() {
 
         // inform all clients about the game abortion
-        NetworkPackage np = null;
+        NetworkPackage np;
         try {
             np = new NetworkPackage<>(NetworkPackage.PACKAGE_TYPE.ABORT);
             Log.d(TAG, "send abort the game to all players");
@@ -529,7 +527,7 @@ public class ServerGameController {
 
 
     public void destroy() {
-        GameContext.getInstance().setPlayers(new ArrayList<Player>());
+        GameContext.getInstance().setPlayers(new ArrayList<>());
         ContextUtil.duplicate_player_indicator = 2;
         serverHandler.destroy();
     }

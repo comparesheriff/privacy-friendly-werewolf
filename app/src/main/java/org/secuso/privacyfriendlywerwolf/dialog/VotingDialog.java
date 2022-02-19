@@ -39,21 +39,14 @@ public class VotingDialog extends DialogFragment {
         playerAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, stringPlayers);
 
         builder.setTitle(R.string.voting_title)
-                .setAdapter(playerAdapter, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        //TODO: use a correct playerAdapter to get by id
-                        String playerName = stringPlayers.get(which);
-                        final Player player = GameContext.getInstance().getPlayerByName(playerName);
+                .setAdapter(playerAdapter, (dialog, which) -> {
+                    //TODO: use a correct playerAdapter to get by id
+                    String playerName = stringPlayers.get(which);
+                    final Player player = GameContext.getInstance().getPlayerByName(playerName);
 
-                        gameController.getGameActivity().runOnGameThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                gameController.sendVotingResult(player);
-                            }
-                        }, 0);
+                    gameController.getGameActivity().runOnGameThread(() -> gameController.sendVotingResult(player), 0);
 
 
-                    }
                 });
 
 

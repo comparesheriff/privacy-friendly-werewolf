@@ -23,7 +23,7 @@ public class GameInformationDialog extends DialogFragment {
     StartHostActivity startHostActivity;
 
     private int amountOfPlayers;
-    private float margin = 0;
+    private final float margin = 0;
 
 
     @Override
@@ -51,16 +51,10 @@ public class GameInformationDialog extends DialogFragment {
                         + System.lineSeparator() + System.lineSeparator()
                         + getResources().getString(R.string.popup_input_correct)
                         + System.lineSeparator())
-                .setPositiveButton(R.string.button_okay, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        startHostActivity.startGame();
-                    }
-                })
-                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        // TODO: is this necessary? Just do nothing here.
-                        dialog.dismiss();
-                    }
+                .setPositiveButton(R.string.button_okay, (dialog, id) -> startHostActivity.startGame())
+                .setNegativeButton(android.R.string.no, (dialog, id) -> {
+                    // TODO: is this necessary? Just do nothing here.
+                    dialog.dismiss();
                 });
 
 

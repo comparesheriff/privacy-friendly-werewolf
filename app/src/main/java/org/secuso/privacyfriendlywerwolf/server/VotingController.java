@@ -58,10 +58,7 @@ public class VotingController {
      */
     public boolean allVotesReceived() {
         Log.d(TAG, "Check if allVotesReceived: currentVotes: " + countCurrentVotings + " AllNeededVotes: " + countAllVotings);
-        if (countAllVotings == countCurrentVotings) {
-            return true;
-        }
-        return false;
+        return countAllVotings == countCurrentVotings;
     }
 
     /**

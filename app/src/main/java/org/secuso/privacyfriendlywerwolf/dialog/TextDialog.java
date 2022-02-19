@@ -30,10 +30,8 @@ public class TextDialog extends DialogFragment {
 
         builder.setTitle(dialogTitle)
                 .setMessage(dialogText)
-                .setPositiveButton(R.string.button_okay, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
+                .setPositiveButton(R.string.button_okay, (dialog, id) -> {
 
-                    }
                 });
 
 

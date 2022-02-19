@@ -25,7 +25,10 @@ public class ContextUtil {
        boolean result = false;
         GameContext context = GameContext.getInstance();
         for (Player player : context.getPlayersList()){
-            if(player.getPlayerName().equals(playerName)) result = true;
+            if (player.getPlayerName().equals(playerName)) {
+                result = true;
+                break;
+            }
         }
         return result;
     }

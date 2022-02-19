@@ -1,21 +1,13 @@
 package org.secuso.privacyfriendlywerwolf.helpers;
 
-import android.Manifest;
-import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.content.pm.ResolveInfo;
 import android.net.wifi.WifiManager;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 
 import org.secuso.privacyfriendlywerwolf.R;
 import org.secuso.privacyfriendlywerwolf.activity.MainActivity;
-
-import java.util.List;
 
 /**
  * PermissionHelper offers methods to check permissions and if they are not granted it will
@@ -29,13 +21,13 @@ public class PermissionHelper {
     private static final int PERMISSIONS_REQUEST_INTERNET = 0;
 
     public static boolean isWifiEnabled(final Context context) {
-        WifiManager wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+        WifiManager wifiManager = (WifiManager) context.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
         return wifiManager.isWifiEnabled();
     }
 
     public static void showWifiAlert(final Context context) {
 
-        WifiManager wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+        WifiManager wifiManager = (WifiManager) context.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
 
         // check if we are allowed to check permissions
         // TODO: what is this for?
@@ -82,16 +74,14 @@ public class PermissionHelper {
                                 // just a button for testing. keeps emulator in clientActivity
                             }
                         })*/
-                        .setPositiveButton(R.string.button_okay, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                // go back to main menu
-                                Intent intent = new Intent(context, MainActivity.class);
-                                // erase backstack (pressing back-button now leads to home screen)
-                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                                intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-                                context.startActivity(intent);
-                            }
+                        .setPositiveButton(R.string.button_okay, (dialog, which) -> {
+                            // go back to main menu
+                            Intent intent = new Intent(context, MainActivity.class);
+                            // erase backstack (pressing back-button now leads to home screen)
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                            context.startActivity(intent);
                         })
                         .setIcon(R.drawable.ic_signal_wifi_off_black_24dp)
                         .setCancelable(false)

@@ -14,52 +14,52 @@ import java.util.List;
  */
 public class HelpDataDump {
 
-    private Context context;
+    private final Context context;
 
     public HelpDataDump(Context context) {
         this.context = context;
     }
 
     public LinkedHashMap<String, List<String>> getDataGeneral() {
-        LinkedHashMap<String, List<String>> expandableListDetail = new LinkedHashMap<String, List<String>>();
+        LinkedHashMap<String, List<String>> expandableListDetail = new LinkedHashMap<>();
 
-        List<String> general = new ArrayList<String>();
+        List<String> general = new ArrayList<>();
         general.add(context.getResources().getString(R.string.help_whatis_answer));
         expandableListDetail.put(context.getResources().getString(R.string.help_whatis), general);
 
-        List<String> roles = new ArrayList<String>();
+        List<String> roles = new ArrayList<>();
         roles.add(context.getResources().getString(R.string.help_roles_answer));
         expandableListDetail.put(context.getResources().getString(R.string.help_roles), roles);
 
-        List<String> role_villager = new ArrayList<String>();
+        List<String> role_villager = new ArrayList<>();
         role_villager.add(context.getResources().getString(R.string.help_roles_villager_answer));
         expandableListDetail.put(context.getResources().getString(R.string.help_roles_villager), role_villager);
 
-        List<String> role_werewolfe = new ArrayList<String>();
+        List<String> role_werewolfe = new ArrayList<>();
         role_werewolfe.add(context.getResources().getString(R.string.help_roles_werewolfe_answer));
         expandableListDetail.put(context.getResources().getString(R.string.help_roles_werewolfe), role_werewolfe);
 
-        List<String> role_witch = new ArrayList<String>();
+        List<String> role_witch = new ArrayList<>();
         role_witch.add(context.getResources().getString(R.string.help_roles_witch_answer));
         expandableListDetail.put(context.getResources().getString(R.string.help_roles_witch), role_witch);
 
-        List<String> role_seer = new ArrayList<String>();
+        List<String> role_seer = new ArrayList<>();
         role_seer.add(context.getResources().getString(R.string.help_roles_seer_answer));
         expandableListDetail.put(context.getResources().getString(R.string.help_roles_seer), role_seer);
 
-        List<String> game_sequence = new ArrayList<String>();
+        List<String> game_sequence = new ArrayList<>();
         game_sequence.add(context.getResources().getString(R.string.help_sequence_answer));
         expandableListDetail.put(context.getResources().getString(R.string.help_sequence), game_sequence);
 
-        List<String> game_end = new ArrayList<String>();
+        List<String> game_end = new ArrayList<>();
         game_end.add(context.getResources().getString(R.string.help_end_answer));
         expandableListDetail.put(context.getResources().getString(R.string.help_end), game_end);
 
-        List<String> privacy = new ArrayList<String>();
+        List<String> privacy = new ArrayList<>();
         privacy.add(context.getResources().getString(R.string.help_privacy_answer));
         expandableListDetail.put(context.getResources().getString(R.string.help_privacy), privacy);
 
-        List<String> permissions = new ArrayList<String>();
+        List<String> permissions = new ArrayList<>();
         permissions.add(context.getResources().getString(R.string.help_permission_answer));
         expandableListDetail.put(context.getResources().getString(R.string.help_permission), permissions);
 

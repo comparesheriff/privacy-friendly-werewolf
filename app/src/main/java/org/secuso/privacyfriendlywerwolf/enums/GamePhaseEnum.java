@@ -18,7 +18,7 @@ public enum GamePhaseEnum {
     PHASE_WITCH_ELIXIR(9),
     PHASE_WITCH_POISON(10);
 
-    private int id;
+    private final int id;
 
     GamePhaseEnum(int id) {
         this.id = id;
