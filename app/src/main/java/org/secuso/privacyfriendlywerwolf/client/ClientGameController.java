@@ -12,6 +12,7 @@ import org.secuso.privacyfriendlywerwolf.activity.MainActivity;
 import org.secuso.privacyfriendlywerwolf.activity.StartClientActivity;
 import org.secuso.privacyfriendlywerwolf.context.GameContext;
 import org.secuso.privacyfriendlywerwolf.enums.GamePhaseEnum;
+import org.secuso.privacyfriendlywerwolf.enums.GameState;
 import org.secuso.privacyfriendlywerwolf.enums.SettingsEnum;
 import org.secuso.privacyfriendlywerwolf.model.NetworkPackage;
 import org.secuso.privacyfriendlywerwolf.model.Player;
@@ -664,9 +665,9 @@ public class ClientGameController {
         }
 
         // check if the endGameTrigger is triggered
-        if (gameIsOver() == 0) {
+        if (GameState.WEREWOLVES_WON.equals(gameIsOver())) {
             endGameAndWerewolvesWin();
-        } else if (gameIsOver() == 1) {
+        } else if (GameState.VILLAGERS_WON.equals(gameIsOver())) {
             endGameAndVillagersWin();
         } else {
             if (!ownPlayer.isDead()) {
@@ -816,9 +817,9 @@ public class ClientGameController {
             Log.e(TAG, "D/THREAD_Problem: " + e.getMessage());
         }
 
-        if (gameIsOver() == 0) {
+        if (GameState.WEREWOLVES_WON.equals(gameIsOver())) {
             endGameAndWerewolvesWin();
-        } else if (gameIsOver() == 1) {
+        } else if (GameState.VILLAGERS_WON.equals(gameIsOver())) {
             endGameAndVillagersWin();
         } else {
             gameActivity.outputMessage(R.string.message_day_over);
@@ -835,24 +836,25 @@ public class ClientGameController {
     /**
      * Determines if the game is over
      *
+     *
      * @return -1: No winner, 0: Werewolves win, 1: Villagers win
      */
-    private int gameIsOver() {
+    private GameState gameIsOver() {
         if (Constants.GAME_FEATURES_ACTIVATED) {
             int innocentCount = gameUtil.getInnocentCount();
             int werewolfCount = gameUtil.getWerewolfCount();
             // werewolves win
             if (werewolfCount >= innocentCount) {
-                return 0;
+                return GameState.WEREWOLVES_WON;
             } // villagers win
             else if (werewolfCount == 0) {
-                return 1;
+                return GameState.VILLAGERS_WON;
             } // game continues
             else {
-                return -1;
+                return GameState.GAME_STILL_RUNNING;
             }
         } else {
-            return -1;
+            return GameState.GAME_STILL_RUNNING;
         }
     }
 
