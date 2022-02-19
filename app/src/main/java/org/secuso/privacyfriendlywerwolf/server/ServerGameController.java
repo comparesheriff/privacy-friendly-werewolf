@@ -47,7 +47,7 @@ public class ServerGameController {
     private GameContext gameContext;
     private final VotingController votingController;
     private final ClientGameController clientGameController;
-
+    private final GameUtil gameUtil;
     public static boolean HOST_IS_DONE = false;
     public static boolean CLIENTS_ARE_DONE = false;
 
@@ -65,6 +65,7 @@ public class ServerGameController {
         votingController = VotingController.getInstance();
         clientGameController = ClientGameController.getInstance();
 
+        gameUtil = new GameUtil();
     }
 
     /**
@@ -407,7 +408,7 @@ public class ServerGameController {
                 //clientGameController.initiateWerewolfPhase();
                 return GamePhaseEnum.PHASE_WEREWOLF_START;
             case PHASE_WEREWOLF_START:
-                List<Player> livingWerewolves = GameUtil.getAllLivingWerewolfes();
+                List<Player> livingWerewolves = gameUtil.getAllLivingWerewolfes();
                 votingController.startVoting(livingWerewolves.size());
                 //clientGameController.initiateWerewolfVotingPhase();
                 return GamePhaseEnum.PHASE_WEREWOLF_VOTING;
@@ -430,7 +431,7 @@ public class ServerGameController {
                 //gameActivity.getNextButton().setVisibility(View.VISIBLE);
                 return GamePhaseEnum.PHASE_DAY_START;
             case PHASE_DAY_START:
-                List<Player> livingPlayers = GameUtil.getAllLivingPlayers();
+                List<Player> livingPlayers = gameUtil.getAllLivingPlayers();
                 votingController.startVoting(livingPlayers.size());
                 //clientGameController.initiateDayVotingPhase();
                 return GamePhaseEnum.PHASE_DAY_VOTING;

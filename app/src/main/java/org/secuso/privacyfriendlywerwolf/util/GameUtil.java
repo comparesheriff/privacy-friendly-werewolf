@@ -15,9 +15,9 @@ import java.util.List;
  */
 public class GameUtil {
 
-    private static final String TAG = "GameUtil";
+    private final String TAG = "GameUtil";
 
-    public static List<Player> getAllLivingPlayers() {
+    public List<Player> getAllLivingPlayers() {
         List<Player> livingPlayers = new ArrayList<>();
         List<Player> players = GameContext.getInstance().getPlayersList();
         for (Player player : players) {
@@ -32,7 +32,7 @@ public class GameUtil {
      * Count the number of living innocent players
      * @return number of living non-werewolves
      */
-    public static int getInnocentCount() {
+    public int getInnocentCount() {
         List<Player> players = GameContext.getInstance().getPlayersList();
         int count = 0;
         for (Player p : players) {
@@ -47,11 +47,11 @@ public class GameUtil {
      * Count the number of living werewolve players
      * @return number of living werewolves
      */
-    public static int getWerewolfCount() {
+    public int getWerewolfCount() {
         List<Player> players = GameContext.getInstance().getPlayersList();
         int count = 0;
         for (Player p : players) {
-            if(!p.isDead() && p.getPlayerRole()== Player.Role.WEREWOLF) {
+            if(!p.isDead() && p.getPlayerRole() == Player.Role.WEREWOLF) {
                 count++;
             }
         }
@@ -60,33 +60,31 @@ public class GameUtil {
 
 
 
-    public static boolean isSeerAlive() {
+    public boolean isSeerAlive() {
         List<Player> players = GameContext.getInstance().getPlayersList();
-        boolean alive = false;
         for (Player player : players) {
             if (player.getPlayerRole().equals(Player.Role.SEER)) {
                 if (!player.isDead()) {
-                    alive = true;
+                    return true;
                 }
             }
         }
-        return alive;
+        return false;
     }
 
-    public static boolean isWitchAlive() {
+    public boolean isWitchAlive() {
         List<Player> players = GameContext.getInstance().getPlayersList();
-        boolean alive = false;
         for (Player player : players) {
             if (player.getPlayerRole().equals(Player.Role.WITCH)) {
                 if (!player.isDead()) {
-                    alive = true;
+                    return true;
                 }
             }
         }
-        return alive;
+        return false;
     }
 
-    public static List<Player> getAllLivingWerewolfes() {
+    public List<Player> getAllLivingWerewolfes() {
         List<Player> werewolfes = new ArrayList<>();
         List<Player> players = GameContext.getInstance().getPlayersList();
         for (Player player : players) {

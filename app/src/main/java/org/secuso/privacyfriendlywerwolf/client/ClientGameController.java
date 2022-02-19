@@ -36,7 +36,7 @@ public class ClientGameController {
 
     // only for the host this serverController is not null
     private ServerGameController serverGameController;
-
+    private final GameUtil gameUtil;
     private Player me;
 
     long myId;
@@ -52,6 +52,7 @@ public class ClientGameController {
         websocketClientHandler = new WebsocketClientHandler();
         websocketClientHandler.setGameController(this);
         gameContext = GameContext.getInstance();
+        gameUtil = new GameUtil();
     }
 
     public static ClientGameController getInstance() {
@@ -277,7 +278,7 @@ public class ClientGameController {
      */
     public void initiateWitchElixirPhase() {
         Player roundVictim = getPlayerKilledByWerewolfesName();
-        if (GameUtil.isWitchAlive() || (roundVictim != null && roundVictim.getPlayerRole() == Player.Role.WITCH)) {
+        if (gameUtil.isWitchAlive() || (roundVictim != null && roundVictim.getPlayerRole() == Player.Role.WITCH)) {
             gameActivity.outputMessage(R.string.message_witch_awaken);
             gameActivity.runOnUiThread(() -> {
                 int time = Integer.parseInt(gameContext.getSetting(SettingsEnum.TIME_WITCH));
@@ -384,7 +385,7 @@ public class ClientGameController {
 
         Log.d(TAG, "initiating WitchPoisonPhase()");
         Player roundVictim = getPlayerKilledByWerewolfesName();
-        if (GameUtil.isWitchAlive() || (roundVictim != null && roundVictim.getPlayerRole() == Player.Role.WITCH)) {
+        if (gameUtil.isWitchAlive() || (roundVictim != null && roundVictim.getPlayerRole() == Player.Role.WITCH)) {
             if (myId == Constants.SERVER_PLAYER_ID && gameActivity.getMediaPlayer() != null) {
                 // prevent music overlays
                 if (gameActivity.getMediaPlayer().isPlaying()) {
@@ -467,7 +468,7 @@ public class ClientGameController {
     public void initiateSeerPhase() {
         Player roundVictim = getPlayerKilledByWerewolfesName();
         Player witchVictim = getPlayerKilledByWitchName();
-        if (GameUtil.isSeerAlive()
+        if (gameUtil.isSeerAlive()
                 || (roundVictim != null && roundVictim.getPlayerRole() == Player.Role.SEER)
                 || (witchVictim != null && witchVictim.getPlayerRole() == Player.Role.SEER)) {
             gameActivity.runOnUiThread(() -> {
@@ -521,7 +522,7 @@ public class ClientGameController {
     public void endSeerPhase() {
         Player roundVictim = getPlayerKilledByWerewolfesName();
         Player witchVictim = getPlayerKilledByWitchName();
-        if (GameUtil.isSeerAlive()
+        if (gameUtil.isSeerAlive()
                 || (roundVictim != null && roundVictim.getPlayerRole() == Player.Role.SEER)
                 || (witchVictim != null && witchVictim.getPlayerRole() == Player.Role.SEER)) {
             gameActivity.outputMessage(R.string.message_seer_sleep);
@@ -838,8 +839,8 @@ public class ClientGameController {
      */
     private int gameIsOver() {
         if (Constants.GAME_FEATURES_ACTIVATED) {
-            int innocentCount = GameUtil.getInnocentCount();
-            int werewolfCount = GameUtil.getWerewolfCount();
+            int innocentCount = gameUtil.getInnocentCount();
+            int werewolfCount = gameUtil.getWerewolfCount();
             // werewolves win
             if (werewolfCount >= innocentCount) {
                 return 0;
