@@ -402,48 +402,14 @@ public class ServerGameController {
      * @return the following phase
      */
     private GamePhaseEnum nextPhase(GamePhaseEnum currentPhase) {
-
-        switch (currentPhase) {
-            case GAME_START:
-                //clientGameController.initiateWerewolfPhase();
-                return GamePhaseEnum.PHASE_WEREWOLF_START;
-            case PHASE_WEREWOLF_START:
-                List<Player> livingWerewolves = gameUtil.getAllLivingWerewolfes();
-                votingController.startVoting(livingWerewolves.size());
-                //clientGameController.initiateWerewolfVotingPhase();
-                return GamePhaseEnum.PHASE_WEREWOLF_VOTING;
-            case PHASE_WEREWOLF_VOTING:
-                //clientGameController.endWerewolfPhase();
-                return GamePhaseEnum.PHASE_WEREWOLF_END;
-            case PHASE_WEREWOLF_END:
-                //clientGameController.initiateWitchElixirPhase();
-                return GamePhaseEnum.PHASE_WITCH_ELIXIR;
-            case PHASE_WITCH_ELIXIR:
-                //clientGameController.initiateWitchPoisonPhase();
-                return GamePhaseEnum.PHASE_WITCH_POISON;
-            case PHASE_WITCH_POISON:
-                //clientGameController.initiateSeerPhase();
-                return GamePhaseEnum.PHASE_SEER;
-            case PHASE_SEER:
-                return GamePhaseEnum.PHASE_SEER_END;
-            case PHASE_SEER_END:
-                //clientGameController.initiateDayPhase();
-                //gameActivity.getNextButton().setVisibility(View.VISIBLE);
-                return GamePhaseEnum.PHASE_DAY_START;
-            case PHASE_DAY_START:
-                List<Player> livingPlayers = gameUtil.getAllLivingPlayers();
-                votingController.startVoting(livingPlayers.size());
-                //clientGameController.initiateDayVotingPhase();
-                return GamePhaseEnum.PHASE_DAY_VOTING;
-            case PHASE_DAY_VOTING:
-                //clientGameController.endDayPhase();
-                return GamePhaseEnum.PHASE_DAY_END;
-            case PHASE_DAY_END:
-                //gameActivity.getNextButton().setVisibility(View.VISIBLE);
-            default:
-                return GamePhaseEnum.GAME_START;
+        if(GamePhaseEnum.PHASE_WEREWOLF_START.equals(currentPhase)){
+            List<Player> livingWerewolves = gameUtil.getAllLivingWerewolfes();
+            votingController.startVoting(livingWerewolves.size());
+        } else if (GamePhaseEnum.PHASE_DAY_START.equals(currentPhase)){
+            List<Player> livingPlayers = gameUtil.getAllLivingPlayers();
+            votingController.startVoting(livingPlayers.size());
         }
-
+        return currentPhase.getNextPhase();
     }
 
 

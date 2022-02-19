@@ -6,25 +6,25 @@ package org.secuso.privacyfriendlywerwolf.enums;
  * @author Tobias Kowalski <tobias.kowalski@stud.tu-darmstadt.de>
  */
 public enum GamePhaseEnum {
-    GAME_START(0),
-    PHASE_WEREWOLF_START(1),
-    PHASE_WEREWOLF_VOTING(2),
-    PHASE_WEREWOLF_END(3),
-    PHASE_SEER(4),
-    PHASE_SEER_END(5),
-    PHASE_DAY_START(6),
-    PHASE_DAY_VOTING(7),
-    PHASE_DAY_END(8),
-    PHASE_WITCH_ELIXIR(9),
-    PHASE_WITCH_POISON(10);
+    GAME_START,
+    PHASE_WEREWOLF_START,
+    PHASE_WEREWOLF_VOTING,
+    PHASE_WEREWOLF_END,
+    PHASE_WITCH_ELIXIR,
+    PHASE_WITCH_POISON,
+    PHASE_SEER,
+    PHASE_SEER_END,
+    PHASE_DAY_START,
+    PHASE_DAY_VOTING,
+    PHASE_DAY_END;
 
-    private final int id;
-
-    GamePhaseEnum(int id) {
-        this.id = id;
-    }
-
-    public int getId() {
-        return this.id;
+    //if it should ever be decided not to follow a cycle for the phases,
+    //you would need a switch or give each phase the ordinal of the next phase as attribute
+    public GamePhaseEnum getNextPhase(){
+        int nextPhaseOrdinal = (this.ordinal() + 1) % values().length;
+        for (GamePhaseEnum phase : values()) {
+            if(phase.ordinal() == nextPhaseOrdinal) return phase;
+        }
+        return GAME_START;
     }
 }
